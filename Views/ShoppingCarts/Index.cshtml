@@ -1,0 +1,94 @@
+﻿@model ProjectLab.Models.View.ShoppingCartModelView
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Cart";
+}
+
+<body class="layout-custom">
+    <h1 class="font-custom" style="text-align:center">Shopping Cart</h1>
+    <hr />
+        <table class="table">   
+            <colgroup>
+        <col span="1" style="width: 30%;">
+        <col span="1" style="width: 35%;">
+        <col span="1" style="width: 5%;">
+        <col span="1" style="width: 5%;">
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 5%;">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Products[0].Photo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products[0].ProductName)
+            </th>
+            <th></th>
+            <th>
+              @Html.DisplayNameFor(model => model.Products[0].Quantity)
+            </th>
+            <th></th>
+             <th>
+                @Html.DisplayNameFor(model => model.Products[0].Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+            var base64 = Convert.ToBase64String(item.Photo);
+                       var img = String.Format("data:image/jpg;base64,{0}", base64);
+                @if(img == null)
+                {
+                    img = "../../images/pizza.jpg";
+                }
+                var price = item.Price * item.Quantity;
+                    <tr>
+                <td>
+                   <div class="mr-1"><img class="rounded" src="@img" width="70"></div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                  <td>
+                   <a href="@Url.Action("DecreaseProductQuantity", "ShoppingCarts", new { productId = item.Id })">
+            <span class="card__by"><i class="fa fa-minus" aria-hidden="true"></i></span>
+            </a>
+                </td>
+                <td>
+                   
+            
+                                   @Html.DisplayFor(modelItem => item.Quantity)
+                                  
+        
+                </td>
+                  <td>
+                     <a href="@Url.Action("IncreaseProductQuantity", "ShoppingCarts", new { productId = item.Id })">
+            <span class="card__by"><i class="fa fa-plus" aria-hidden="true"></i></span>
+        </a>
+                                   
+                </td>
+                  <td>
+                    @price
+                                   
+                </td>
+                <td><a href="@Url.Action("DeleteProduct", "ShoppingCarts", new { productId = item.Id })">
+            <span class="card__by"><h3><i class="fa fa-times" aria-hidden="true" style="color:red !important"></i></h3></span>
+        </a>        </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+ <div class="d-flex flex-row justify-content-between align-items-center p-2 color-beige mt-4 px-3 rounded">
+                       <div class="mr-1"><h5>Total Price: @Model.Products.Sum(p => p.Price * p.Quantity) RON</h5></div>
+                       <div class="d-flex align-items-center">
+                           <button class="btn btn-primary" type="button" onclick="window.location.href='@Url.Action("PlaceOrder", "ShoppingCarts")'">Place Order</button>
+                       </div>
+                   </div>
+</body>

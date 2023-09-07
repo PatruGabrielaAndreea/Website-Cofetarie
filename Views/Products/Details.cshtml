@@ -1,0 +1,45 @@
+﻿@using ProjectLab.Models.View
+
+@model ProductModelView
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Details";
+
+    var base64 = Convert.ToBase64String(Model.Photo);
+    var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
+}
+
+<body class="layout-custom">
+    <h1 class="font-custom" style="text-align: center">@Model.Name</h1>
+    <hr />
+    <div class="card-cake-container">
+        <div class="card-cake u-clearfix">
+            <div class="card-cake-body">
+                <button class="btn btn-custom font-custom" type="button" style="float: right;" 
+                onclick="window.location.href='@Url.Action("AddToCart", "Products", new { productId = Model.ProductId})'">
+                <i class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                 @if (User.IsInRole("Admin"))
+                {
+                    <button class="btn btn-custom font-custom" type="button" style="float: right;" 
+                onclick="window.location.href='@Url.Action("Edit", "Products", new { id = Model.ProductId })'">Edit Product</button>
+                }
+                 @if (User.IsInRole("Admin"))
+                {
+                    <button class="btn btn-custom font-custom" type="button" style="float: right;" 
+                onclick="window.location.href='@Url.Action("Delete", "Products", new { id = Model.ProductId })'">Delete Product</button>
+                }
+                <form method="post" asp-action="Edit" asp-controller="Product">
+                    <span class="card-cake-description subtle">
+                        <div>
+                            <h4>Description: @Model.Description</h4>
+                            <h4>Price: @Model.Price RON</h4>
+                        </div>
+                    </span>
+                </form>
+            </div>
+            <img src="@imgSrc" alt="" class="card-cake-media" style = "width : 20%"/>
+        </div>
+        <div class="card-cake-shadow"></div>
+    </div>
+</body>

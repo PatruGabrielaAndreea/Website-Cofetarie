@@ -1,0 +1,11 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Empty cart";
+}
+
+<body class="layout-custom" style = "background-color: transparent; background-image: url('~/images/drink.jpg');  background-repeat: no-repeat; background-attachment: fixed;
+background-size: cover">
+    <h1 class="font-custom" style="text-align: center">Your shopping cart is empty.</h1>
+    <a href="@Url.Action("Menu", "Products")"><h1 style="text-align: center">View products</h1></a>
+</body>

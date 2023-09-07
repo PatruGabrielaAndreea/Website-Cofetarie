@@ -1,0 +1,76 @@
+﻿@model ProjectLab.Models.View.ProductListModelView
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Index";
+}
+
+<link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+         rel = "stylesheet">
+<script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+@section Scripts {
+  <script>
+   $("#search-input2").autocomplete({
+    source: function(request, response) {
+        var productType = $("#search-input2").data("product-type");
+        $.ajax({
+            url: "/Products/SearchProducts",
+            data: { term: request.term, productType: productType },
+             success: function(data) {
+                // Limit the results to 5
+                var limitedData = data.slice(0, 5);
+                response(limitedData);
+            }
+        });
+    }
+  });
+  </script>
+}
+
+<body class="layout-custom">
+    <h1 class="font-custom" style="text-align: center"> @Model.PageTitle </h1>
+    <hr />
+
+    <form asp-action="List" method="get">
+    <div class="form-actions no-color">
+        <p style = "text-align: right">
+            Search by name: <input  id="search-input" type="text" name="currentFilter" value="@ViewBag.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-default" />
+            <input type="hidden" name="productType" value="@Model.PageProductTypeId" />
+        </p>
+    </div>
+    </form>
+
+    <form asp-action="List" method="get">
+    <div class="form-actions no-color">
+        <p style = "text-align: right">
+             Predictive search: <input  id="search-input2" type="text" name="currentFilter" data-product-type="@Model.PageProductTypeId"  value="@ViewBag.CurrentFilter" />
+            <input type="hidden" name="productType" value="@Model.PageProductTypeId" />
+            <input type="submit" value="Search" class="btn btn-default" />
+        </p>
+    </div>
+    </form>
+
+    <form asp-action="SearchProductsByLucene" method="get">
+    <div class="form-actions no-color">
+        <p style = "text-align: right">
+            Search by Lucene: <input  id="search-input3" type="text" name="searchTerm" value="@ViewBag.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-default" />
+            <input type="hidden" name="productType" value="@Model.PageProductTypeId" />
+        </p>
+    </div>
+    </form>
+    @if(User.IsInRole("Admin"))
+    {
+        <button class="btn btn-custom font-custom" type="button" style="float: right;" onclick="window.location.href='@Url.Action("Create", "Products", new { productType = Model.PageProductTypeId })'">Add Product</button>
+    }   
+    
+    <section class="cards">
+        @foreach (var product in Model.Products)
+        {
+            @await Html.PartialAsync("~/Views/Products/_Card.cshtml", product)
+        }
+    </section>
+</body>

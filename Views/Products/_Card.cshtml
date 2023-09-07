@@ -1,0 +1,24 @@
+﻿@model ProjectLab.Models.View.ProductModelView
+
+@{
+    var base64 = Convert.ToBase64String(Model.Photo);
+    var img = String.Format("data:image/jpg;base64,{0}", base64);
+}
+
+<article class="card card--1">
+    <div class="card__img"></div>
+    
+        @if (Model.Photo == null)
+                         {
+                            img = "../../images/user.jpg";
+                         } 
+        <div class="card__img--hover" style="background: url(@img); background-position-x: center; background-repeat: no-repeat;"></div>
+    </a>
+    <div class="card__info">
+        <a href="@Url.Action("Details", "Products", new { productId = Model.ProductId })" class="card_link">@Model.Name</a>
+        <span class="card__by" style = "padding-right: 10px">@Model.FilePath?.Split('\\').ToList().Last()</span>
+        <span class="card__by" style = "padding-right: 10px">Pret: @Model.Price RON</span>
+        <a href="@Url.Action("AddToCart", "Products", new { productId = Model.ProductId})">
+            <i class="fa fa-cart-plus" aria-hidden="true"></i></a>
+    </div>
+</article>
